@@ -1,6 +1,9 @@
 #!/usr/bin/perl -w
 use strict;
-
+=begin
+	first argument is nbest file
+	2nd argument is hash table i.g. 9000.5
+=cut
 open(Nbest , $ARGV[0]) or die "can't open $ARGV[0]";
 
 dbmopen( my %hash , $ARGV[1] , 0444) or die "can't open $ARGV[1]";
@@ -17,7 +20,7 @@ while(<Nbest>)
 	my @eachLine = split /\|\|\|/ , $_;
 	#printf "%s\n" , $eachLine[1];
 	my @txt = split /\s/ , $eachLine[1];
-	#print @txt;
+	print @txt;
 	chomp $eachLine[4];
 	my @code = split /\s|=/ , $eachLine[4];
 	#printf "%s\n" , $eachLine[4];
@@ -30,7 +33,8 @@ while(<Nbest>)
 		#print $#wordId;
 		for(my $j=0 ; $j<=$#wordId ; $j++)
 		{
-			$word .= $txt[$wordId[$j]+1].' ';
+			#$word .= $txt[$wordId[$j]+1].' ';
+			 printf "%s\n" , $txt[$wordId[$j]+1];
 		}
 		chomp $word; chop $word;	
 	if(!defined $hash{$word})
