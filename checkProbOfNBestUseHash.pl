@@ -20,7 +20,7 @@ while(<Nbest>)
 	my @eachLine = split /\|\|\|/ , $_;
 	#printf "%s\n" , $eachLine[1];
 	my @txt = split /\s/ , $eachLine[1];
-	print @txt;
+	#print @txt;
 	chomp $eachLine[4];
 	my @code = split /\s|=/ , $eachLine[4];
 	#printf "%s\n" , $eachLine[4];
@@ -33,8 +33,7 @@ while(<Nbest>)
 		#print $#wordId;
 		for(my $j=0 ; $j<=$#wordId ; $j++)
 		{
-			#$word .= $txt[$wordId[$j]+1].' ';
-			 printf "%s\n" , $txt[$wordId[$j]+1];
+			$word .= $txt[$wordId[$j]+1].' ';
 		}
 		chomp $word; chop $word;	
 	if(!defined $hash{$word})
@@ -51,10 +50,10 @@ while(<Nbest>)
 	my @eachProb = split /:|\s/ , $nbestProb;
 	my @reduceProb = split $eachProb[12];
 
-	printf "%s\t%s\n" , abs $totalProb ,abs $eachProb[12];
+	printf "%s\t%s\t" , abs $totalProb ,abs $eachProb[12];
 	if((abs($totalProb)-abs($eachProb[12])<0.01 and abs($totalProb)-abs($eachProb[12])>0)  or (abs($totalProb)-abs($eachProb[12])>-0.01 and abs($totalProb)-abs($eachProb[12])<0))
 	{
-		print "ok!!";
+		print "ok!!\n";
 	}
-	else{print "not same!!";}
+	else{print "not same!!\n";}
 }
