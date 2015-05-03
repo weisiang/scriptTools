@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w
 use strict;
+use GDBM_File;
 =begin
 	first argument is nbest file
 	2nd argument is hash table i.g. 9000.5
@@ -14,37 +15,53 @@ while((my $key , my $value)=each %hash)
 	if($value<=$mini){$mini=$value;}		
 }
 $unk=log((exp $mini)*0.01);	
-printf "%s\n" , $unk;
+printf "unk : %s\n" , $unk;
+my $count=1;
 while(<Nbest>)
 {
+	printf "number : %s\n" , $count;
+	$count++;
 	my @eachLine = split /\|\|\|/ , $_;
-	#printf "%s\n" , $eachLine[1];
-	my @txt = split /\s/ , $eachLine[1];
+	my $trimTxt = &trim($eachLine[1]);
+	printf "%s\n" , $trimTxt;
+	my @txt = split /\s/ , $trimTxt;
 	#print @txt;
 	chomp $eachLine[4];
-	my @code = split /\s|=/ , $eachLine[4];
-	#printf "%s\n" , $eachLine[4];
-	my $word='';
+	my $trimAlignment = &trim($eachLine[4]);
+	printf "%s\n" , $trimAlignment;
+	my @code = split /\s|=/ , $trimAlignment;
 	$totalProb=0;
-	for(my $i=2 ; $i<=$#code ; $i+=2)
+
+	for(my $i=1 ; $i<=$#code ; $i+=2)
 	{
-		my @wordId = split /-/ , $code[$i];	
+	my $prob=0;
+	my $word='';
+	my @wordId=();
+	@wordId = split /-/ , $code[$i];	
 	
-		#print $#wordId;
-		for(my $j=0 ; $j<=$#wordId ; $j++)
+		printf "wordId last index : %s\n" , $#wordId;
+		for(my $j=$wordId[0] ; $j<=$wordId[$#wordId] ; $j++)
 		{
-			$word .= $txt[$wordId[$j]+1].' ';
+=begin
+			printf "\$wordId[\$#wordId] : %s\n" , $wordId[$#wordId];
+			print "j=$j\n" ;
+			printf "txt : %s\n", $txt[$j] ;
+=cut			
+			$word .= $txt[$j] . ' ';
 		}
 		chomp $word; chop $word;	
 	if(!defined $hash{$word})
 	{
+		$prob=$unk;
 		$totalProb+=$unk;
 	}
 	else
 	{
+		$prob=$hash{$word};
 	$totalProb += $hash{$word};
 	}
-	$word='';
+		printf "%s\n" , $word;
+		printf "%s\n" , $prob;
 	}	
 	my $nbestProb = $eachLine[2];
 	my @eachProb = split /:|\s/ , $nbestProb;
@@ -56,4 +73,8 @@ while(<Nbest>)
 		print "ok!!\n";
 	}
 	else{print "not same!!\n";}
+}
+sub trim
+{
+	{ my $s = shift; $s =~ s/^\s+//;   return $s;    };
 }

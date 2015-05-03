@@ -1,5 +1,6 @@
 #!/usr/bin/perl -w 
 use strict;
+use GDBM_File;
 
 open(TranslationOption , $ARGV[0]) or die "can't open $ARGV[0]!!";
 dbmopen(my %hash , $ARGV[1] , 0444) or die "can't open $ARGV[1]!!";
