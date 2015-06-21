@@ -2,10 +2,10 @@
 use strict;
 use GDBM_File;
 
-my $countFileT="9000_count_EMT";
-my $countFileG="9000_count_EMG";
-my $denominator ="9000_count_denominator_EMG";
-my $nextWord ="9000_EM_NextWord_EMG";
+my $countFileT="9000_count_EMT"; #log formate.
+my $countFileG="9000_count_EMG"; #exp formate.
+my $denominator ="9000_count_denominator_EMG"; #exp formate.
+my $nextWord ="9000_EM_NextWord_EMG"; #log formate. max value is 0.
 
 system ("rm -rf $countFileT $denominator $nextWord $countFileG");
 system ("/home/nlp/tool/showNdbm.pl 9000_count.5> $countFileT");
