@@ -21,14 +21,27 @@ while(<corpusFile>)
 {
 	my $corpusLine = $_;
 	my $segLine = <segFile>;
-	printf "%s%s", $corpusLine	, $segLine;
+	chomp $corpusLine;
+	chomp $segLine;
+	if($debugFlag){printf "%s\n%s\n", $corpusLine	, $segLine;}
+	&match($corpusLine , $segLine);	
 }
 
 
 
 
 
-
+sub match
+{
+	my $corpusLineSplite = shift @_;
+	my $segLineSplite = shift @_ ; 
+	my @corpusLineSplite = split /\s+/ , $corpusLineSplite;
+	my @segLineSplite = split /\s+/ , $segLineSplite ; 
+#	printf "%s\n%s\n" , $corpusLineSplite , $segLineSplite;
+#	printf "%s\n%s\n" , $corpusLineSplite[1] , $segLineSplite[1] ;
+	
+	
+}
 
 
 if($debugFlag)
