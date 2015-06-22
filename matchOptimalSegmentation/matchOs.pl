@@ -6,11 +6,14 @@ use GDBM_File;
 my $segFileName='';
 my $corpusFileName='';
 my $debugFlag=0;
-
+my $Lvalue='0';
+my $Rvalue='0';
 Getopt::Long::GetOptions
 (
 	'seg|s=s' => \$segFileName,
 	'corpus|c=s' => \$corpusFileName,
+	'lvalue|l=i' => \$Lvalue;
+	'rvalue|r=i' => \$Rvalue;
 	'debug|d!' => \$debugFlag
 );
 
