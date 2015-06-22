@@ -12,8 +12,8 @@ Getopt::Long::GetOptions
 (
 	'seg|s=s' => \$segFileName,
 	'corpus|c=s' => \$corpusFileName,
-	'lvalue|l=i' => \$Lvalue;
-	'rvalue|r=i' => \$Rvalue;
+	'lvalue|l=i' => \$Lvalue,
+	'rvalue|r=i' => \$Rvalue,
 	'debug|d!' => \$debugFlag
 );
 
@@ -27,24 +27,49 @@ while(<corpusFile>)
 	chomp $corpusLine;
 	chomp $segLine;
 	if($debugFlag){printf "%s\n%s\n", $corpusLine	, $segLine;}
-	&match($corpusLine , $segLine);	
+	&phraseLength($corpusLine , $segLine);	
 }
 
-
-
-
-
-sub match
+sub phraseLength 
 {
 	my $corpusLineSplite = shift @_;
 	my $segLineSplite = shift @_ ; 
-	my @corpusLineSplite = split /\s+/ , $corpusLineSplite;
 	my @segLineSplite = split /\s+/ , $segLineSplite ; 
-#	printf "%s\n%s\n" , $corpusLineSplite , $segLineSplite;
-#	printf "%s\n%s\n" , $corpusLineSplite[1] , $segLineSplite[1] ;
-	
+	my $length;
+
+	for(my $i=0 ; $i<=$#segLineSplite ; $i++)
+	{
+		if($#segLineSplite==0){$length = $segLineSplite[0]+1;} #NF==1.
+		else #NF >= 2.
+		{
+			if($i==0)
+			{
+				$length = $segLineSplite[$i]+1;
+			}
+			else
+			{
+				$length = $segLineSplite[$i] -$segLineSplite[$i-1];
+			}
+		}
+		&extract($length , $segLineSplite[$i] , $corpusLineSplite);
+	}
 	
 }
+
+sub extract
+{
+	my $length = shift ; my $index = shift ; my $sentence = shift ;
+
+}
+
+
+
+
+
+
+
+
+
 
 
 if($debugFlag)
