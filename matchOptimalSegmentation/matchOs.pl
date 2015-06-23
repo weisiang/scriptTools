@@ -8,6 +8,7 @@ my $corpusFileName='';
 my $debugFlag=0;
 my $Lvalue='0';
 my $Rvalue='0';
+dbmopen(my %matchSeg , "matchSeg" , 0644) or die "can't touch GDBM!";
 Getopt::Long::GetOptions
 (
 	'seg|s=s' => \$segFileName,
@@ -28,15 +29,15 @@ while(<corpusFile>)
 	chomp $corpusLine;
 	chomp $segLine;
 	if($debugFlag){printf "%s\n%s\n", $corpusLine	, $segLine;}
-	&phraseLength($corpusLine , $segLine);	
+	&phraseLength($corpusLine , $segLine , $lineCount);	
 	$lineCount++;
-	print '$$$$$$$$$$$$$$' . "$lineCount" . '$$$$$$$$$$$$$$$' . "\n"; 
 }
 
 sub phraseLength 
 {
 	my $corpusLine = shift @_;
 	my $segLineSplite = shift @_ ; 
+	my $lineCount = shift @_;
 	my @segLineSplite = split /\s+/ , $segLineSplite ; 
 	my $length;
 
@@ -54,14 +55,14 @@ sub phraseLength
 				$length = $segLineSplite[$i] -$segLineSplite[$i-1];
 			}
 		}
-		&extract($length , $segLineSplite[$i] , $corpusLine);
+		&extract($length , $segLineSplite[$i] , $corpusLine , $lineCount);
 	}
 	
 }
 
 sub extract
 {
-	my $length = shift ; my $index = shift ; my $sentence = shift ;
+	my $length = shift ; my $index = shift ; my $sentence = shift , my $lineCount = shift;
 	chomp $sentence;
 	my $phraseStart =  $index - $length + 1;
 	my $phraseEnd = $index;
@@ -80,8 +81,20 @@ sub extract
 			{
 				$outPhrase .= $sentenceSplite[$i+$j] . ' ';
 			}
-		chop $outPhrase;
-		printf "%s\n", $outPhrase;
+			chop $outPhrase;
+			if($outPhrase ne '')
+			{
+				if(!defined $matchSeg{$outPhrase})
+				{
+					$matchSeg{$outPhrase} = $lineCount;
+				}
+				else
+				{
+					printf "%s\n" , $outPhrase;
+					#printf "%s\n", $outPhrase ;
+					
+				}
+			}	
 		}
 	}
 }
