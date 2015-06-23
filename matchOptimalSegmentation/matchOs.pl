@@ -8,9 +8,10 @@ my $corpusFileName='';
 my $debugFlag=0;
 my $Lvalue='0';
 my $Rvalue='0';
-dbmopen(my %matchSeg , "matchSeg" , 0644) or die "can't touch GDBM!";
+my $PBLM='';
 Getopt::Long::GetOptions
 (
+	'PBLM|P=s' => \$PBLM, 
 	'seg|s=s' => \$segFileName,
 	'corpus|c=s' => \$corpusFileName,
 	'lvalue|l=i' => \$Lvalue,
@@ -18,6 +19,8 @@ Getopt::Long::GetOptions
 	'debug|d!' => \$debugFlag
 );
 
+dbmopen(my %matchSeg , "matchSeg" , 0644) or die "can't touch GDBM!";
+dbmopen(my %PBLM , "$PBLM" , 0444) or die "can't open the DBM!";
 open(corpusFile , "<$corpusFileName");
 open(segFile , "<$segFileName");
 
@@ -32,6 +35,8 @@ while(<corpusFile>)
 	&phraseLength($corpusLine , $segLine , $lineCount);	
 	$lineCount++;
 }
+
+&match();
 
 sub phraseLength 
 {
@@ -92,7 +97,22 @@ sub extract
 	}
 }
 
+sub match
+{
+	foreach (keys %PBLM)	
+	{
+		my $PBLMPhrase = $_;
+		while (my $seg =  keys %matchSeg)
+		{
+			if ($PBLMPhrase =~ $seg)	
+			{
+				printf "PBLM : %s\tSEG : %s\t prob : %s\n" , $PBLMPhrase , $seg , $PBLM{$PBLMPhrase};
+				last;
+			}
+		}
 
+	}
+}
 
 
 
