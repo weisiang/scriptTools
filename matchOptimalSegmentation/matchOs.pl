@@ -67,7 +67,6 @@ sub extract
 	my $phraseStart =  $index - $length + 1;
 	my $phraseEnd = $index;
 	
-	#printf "S : %s\tE : %s\tL : %s\n" , $phraseStart , $phraseEnd , $length
 	
 	my @sentenceSplite = split /\s+/ , $sentence ; 
 	
@@ -86,13 +85,7 @@ sub extract
 			{
 				if(!defined $matchSeg{$outPhrase})
 				{
-					$matchSeg{$outPhrase} = $lineCount;
-				}
-				else
-				{
-					printf "%s\n" , $outPhrase;
-					#printf "%s\n", $outPhrase ;
-					
+					$matchSeg{$outPhrase} = 1;
 				}
 			}	
 		}
