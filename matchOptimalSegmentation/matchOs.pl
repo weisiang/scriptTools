@@ -20,6 +20,7 @@ Getopt::Long::GetOptions
 open(corpusFile , "<$corpusFileName");
 open(segFile , "<$segFileName");
 
+my $lineCount=1;
 while(<corpusFile>)
 {
 	my $corpusLine = $_;
@@ -28,11 +29,13 @@ while(<corpusFile>)
 	chomp $segLine;
 	if($debugFlag){printf "%s\n%s\n", $corpusLine	, $segLine;}
 	&phraseLength($corpusLine , $segLine);	
+	$lineCount++;
+	print '$$$$$$$$$$$$$$' . "$lineCount" . '$$$$$$$$$$$$$$$' . "\n"; 
 }
 
 sub phraseLength 
 {
-	my $corpusLineSplite = shift @_;
+	my $corpusLine = shift @_;
 	my $segLineSplite = shift @_ ; 
 	my @segLineSplite = split /\s+/ , $segLineSplite ; 
 	my $length;
@@ -51,7 +54,7 @@ sub phraseLength
 				$length = $segLineSplite[$i] -$segLineSplite[$i-1];
 			}
 		}
-		&extract($length , $segLineSplite[$i] , $corpusLineSplite);
+		&extract($length , $segLineSplite[$i] , $corpusLine);
 	}
 	
 }
@@ -59,7 +62,28 @@ sub phraseLength
 sub extract
 {
 	my $length = shift ; my $index = shift ; my $sentence = shift ;
-
+	chomp $sentence;
+	my $phraseStart =  $index - $length + 1;
+	my $phraseEnd = $index;
+	
+	#printf "S : %s\tE : %s\tL : %s\n" , $phraseStart , $phraseEnd , $length
+	
+	my @sentenceSplite = split /\s+/ , $sentence ; 
+	
+	for(my $l=1 ; $l<=$length ; $l++)
+	{
+		for(my $i = $phraseStart ; $i <= $phraseEnd - $l +1 ; $i++)
+		{
+			my $outPhrase='';
+		
+			for(my $j = 0 ; $j<$l  ; $j++)
+			{
+				$outPhrase .= $sentenceSplite[$i+$j] . ' ';
+			}
+		chop $outPhrase;
+		printf "%s\n", $outPhrase;
+		}
+	}
 }
 
 
