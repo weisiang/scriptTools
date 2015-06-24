@@ -13,6 +13,6 @@ while(<NdbmFile>)
 	}
 	else
 	{
-		printf "%s\t%s\n", $eachline[0] ,$eachline[1];
+		printf "%s\t%s", $eachline[0] ,$eachline[1];
 	}
 }

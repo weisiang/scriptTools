@@ -87,7 +87,7 @@ while(<countFileT>)
 	
 	
 }
-system("/home/nlp/tool/showGdm.pl 9000_EM_NextWord_EMG > 9000_EM_NextWord_EMT");
+system("/home/nlp/tool/showGdbm.pl 9000_EM_NextWord_EMG > 9000_EM_NextWord_EMT");
 
 sub trim
 {
